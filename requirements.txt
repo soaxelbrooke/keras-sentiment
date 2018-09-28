@@ -1,0 +1,8 @@
+tensorflow-gpu
+keras
+keras_tqdm
+toolz
+scikit-learn
+tqdm
+numpy
+pandas
