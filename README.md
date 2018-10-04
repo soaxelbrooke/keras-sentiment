@@ -82,3 +82,6 @@ $ gcloud ml-engine versions create "v$VERSION" --model "keras_sentiment" --origi
 ```bash
 $ time gcloud ml-engine predict --model=keras_sentiment --json-instances=instances_100.json
 ```
+
+Note: we see ~80 predictions per second per single core machine (with 100-item batches).
+
