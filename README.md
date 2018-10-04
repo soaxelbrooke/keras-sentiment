@@ -50,3 +50,35 @@ $ curl --request POST \
           0,   0,   0, 131,  27,   7,  13,  48,   1]]
 }'
 ```
+
+## Cloud Deployment
+
+### Export
+
+```bash
+$ ./export_model.py
+```
+
+### Upload to GCS
+
+Set version first!
+
+```bash
+$ export VERSION=4
+```
+
+```bash
+$ gsutil rsync -r out/ gs://axelbrooke-models/keras-sentiment/$VERSION
+```
+
+### Create New Version
+
+```bash
+$ gcloud ml-engine versions create "v$VERSION" --model "keras_sentiment" --origin gs://axelbrooke-models/keras-sentiment/$VERSION/ --runtime-version 1.10
+```
+
+## Cloud Prediction
+
+```bash
+$ time gcloud ml-engine predict --model=keras_sentiment --json-instances=instances_100.json
+```
