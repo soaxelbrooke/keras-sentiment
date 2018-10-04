@@ -20,17 +20,23 @@ Run the jupyter notebook:
 $ jupyter notebook
 ```
 
-## Serving
+## Tensorflow Serving
 
 ```
-$ tensorflow_model_server --model_base_path=$(pwd)/out/sentiment --model_name=sentiment --rest_api_port=9000 
+$ docker run -it --runtime=nvidia -p 8501:8501   --mount type=bind,source=$(pwd)/out/sentiment,target=/models/sentiment   -e MODEL_NAME=sentiment -t tensorflow/serving:latest 
+```
+
+### GPU
+
+```
+$ docker run -it --runtime=nvidia -p 8502:8501   --mount type=bind,source=$(pwd)/out/sentiment,target=/models/sentiment   -e MODEL_NAME=sentiment -e CUDA_VISIBLE_DEVICES=0 -t tensorflow/serving:latest-gpu 
 ```
 
 ### Example Payload
 
 ```
 $ curl --request POST \
-  --url http://localhost:9000/v1/models/sentiment/versions/1:predict \
+  --url http://localhost:8501/v1/models/sentiment/versions/1:predict \
   --header 'content-type: application/json' \
   --data '{
 	"instances": [[  0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,
@@ -68,7 +74,7 @@ $ export VERSION=4
 ```
 
 ```bash
-$ gsutil rsync -r out/ gs://axelbrooke-models/keras-sentiment/$VERSION
+$ gsutil rsync -r out/sentiment/1/ gs://axelbrooke-models/keras-sentiment/$VERSION
 ```
 
 ### Create New Version
